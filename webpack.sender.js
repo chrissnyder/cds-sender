@@ -3,10 +3,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'production',
-  entry: './src/receiver.js',
+  entry: './src/sender.js',
   output: {
-    path: path.resolve(__dirname, 'dist-receiver'),
-    filename: 'receiver.js',
+    path: path.resolve(__dirname, 'dist-sender'),
+    filename: 'sender.js',
     libraryTarget: 'window'
   },
   module: {
@@ -22,14 +22,14 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'M1 COLS Receiver',
-      template: path.resolve(__dirname, 'templates/receiver.html'),
+      title: 'M1 COLS Sender',
+      template: path.resolve(__dirname, 'templates/sender.html'),
       inject: 'head'
     })
   ],
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist-receiver'),
+    contentBase: path.resolve(__dirname, 'dist-sender'),
     compress: false,
-    port: 3003
+    port: 3004
   }
 };

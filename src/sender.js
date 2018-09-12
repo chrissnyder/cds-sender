@@ -97,7 +97,7 @@ export class Sender {
 
     const req = {
       id: this._makeRequestId(),
-      method,
+      method: `${Sender.sentinel}:${method}`,
       params
     };
 
@@ -123,7 +123,7 @@ export class Sender {
       }
 
       const targetOrigin = this._origin === 'file://' ? '*' : this._origin;
-      this._frame.postMessage(JSON.stringify(req), targetOrigin);
+      this._receiver.postMessage(JSON.stringify(req), targetOrigin);
     });
   }
 
@@ -131,6 +131,7 @@ export class Sender {
     const targetOrigin = this._origin === 'file://' ? '*' : this._origin;
     const interval = setInterval(
       () => {
+        console.log('polling...', targetOrigin);
         if (this._connected) {
           clearInterval(interval);
         } else if (this._receiver) {
@@ -158,6 +159,8 @@ export class Sender {
       return;
     }
 
+    console.log('sender received message', message.data);
+
     const origin = message.origin === 'null' ? 'file://' : message.origin;
     if (origin !== this._origin) {
       return;
@@ -175,7 +178,7 @@ export class Sender {
       return;
     }
 
-    if (message.data.includes('asfd') && !this._connected) {
+    if (message.data.includes('ready') && !this._connected) {
       this._connected = true;
     } else if (message.data === this._makeMessage('ready')) {
       return;

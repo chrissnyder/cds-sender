@@ -41,6 +41,7 @@ export class Receiver {
   }
 
   _listener = (message: Message): void => {
+    console.log('receiver received message', message.data);
     const origin = message.origin === 'null' ? 'file://' : message.origin;
 
     if (message.data === this._makeMessage('poll')) {
@@ -56,7 +57,7 @@ export class Receiver {
       return;
     }
 
-    if (!request || typeof request !== 'string') {
+    if (!request || typeof request.method !== 'string') {
       return;
     }
 
@@ -80,7 +81,6 @@ export class Receiver {
     });
 
     const targetOrigin = origin === 'file://' ? '*' : origin;
-
     window.parent.postMessage(response, targetOrigin);
   }
 
