@@ -131,7 +131,6 @@ export class Sender {
     const targetOrigin = this._origin === 'file://' ? '*' : this._origin;
     const interval = setInterval(
       () => {
-        console.log('polling...', targetOrigin);
         if (this._connected) {
           clearInterval(interval);
         } else if (this._receiver) {
@@ -158,8 +157,6 @@ export class Sender {
     ) {
       return;
     }
-
-    console.log('sender received message', message.data);
 
     const origin = message.origin === 'null' ? 'file://' : message.origin;
     if (origin !== this._origin) {

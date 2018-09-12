@@ -41,7 +41,6 @@ export class Receiver {
   }
 
   _listener = (message: Message): void => {
-    console.log('receiver received message', message.data);
     const origin = message.origin === 'null' ? 'file://' : message.origin;
 
     if (message.data === this._makeMessage('poll')) {
