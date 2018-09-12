@@ -5,7 +5,7 @@ type SenderOptions = {
   timeout?: number
 };
 
-class Sender {
+export class Sender {
   static sentinel: string = 'm1-cols';
 
   _origin: string;

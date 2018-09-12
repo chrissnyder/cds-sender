@@ -10,7 +10,7 @@ type Message = {
   source: Window
 };
 
-class Receiver {
+export class Receiver {
   static allowedMethods: Array<string> = ['get', 'set', 'del', 'clear', 'getKeys'];
   static sentinel: string = 'm1-cols';
 
