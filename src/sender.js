@@ -1,7 +1,7 @@
 /* @flow */
 
 type SenderOptions = {
-  frameId: string,
+  frameId?: string,
   timeout?: number
 };
 
@@ -15,21 +15,28 @@ export class Sender {
   _closed: boolean = false;
 
   _id: string = makeUuid();
+  _frameId: string;
   _count: number = 0;
   _requests: Object = {};
 
   _receiver: HTMLIFrameElement;
 
-  constructor(url: string, options: SenderOptions) {
+  constructor(url: string, options: SenderOptions = {}) {
+    this._frameId = options.frameId || `${Sender.sentinel}-${this._id}`;
     this._origin = readOrigin(url);
     this._timeout = options.timeout || 5000;
 
     window.addEventListener('message', this._listener, false);
 
-    const frame = document.getElementById(options.frameId);
-    this._receiver = frame.contentWindow;
+    let frame;
+    if (options.frameId) {
+      frame = document.getElementById(options.frameId);
+      this._poll();
+    } else {
+      frame = this._createFrame(url);
+    }
 
-    this._poll();
+    this._receiver = frame.contentWindow;
   }
 
   onConnect(): Promise<*> {
@@ -193,6 +200,19 @@ export class Sender {
     } else if (this._requests[response.id]) {
       this._requests[response.id](response.error, response.result);
     }
+  }
+
+  _createFrame(url: string) {
+    const frame = document.createElement('iframe');
+    frame.id = this._frameId;
+
+    frame.style['display'] = 'none';
+    frame.style['pointer-events'] = 'none';
+
+    document.body.appendChild(frame);
+    frame.src = url;
+
+    return frame;
   }
 }
 

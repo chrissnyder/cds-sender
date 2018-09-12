@@ -5,11 +5,8 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
-    <iframe id="receiver" src="http://localhost:3003"></iframe>
     <script type="text/javascript">
-      const sender = new Sender('http://localhost:3003', {
-        frameId: 'receiver'
-      });
+      const sender = new Sender('http://localhost:3003');
     </script>
   </body>
 </html>
