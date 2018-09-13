@@ -20,16 +20,13 @@ function boot(
 
   const url = urls[environment];
   const sender = new Sender(url);
-  window.sender = sender;
 
   sender.onConnect()
     .then(() => {
       const search = qs.parse(location.search);
       const attribution = readAttribution(search);
       if (attribution) {
-        console.log('detected attribution data, saving...');
         for (const [tag, value] of Object.entries(attribution)) {
-          console.log(tag, value);
           sender.set(tag, value);
         }
       }
