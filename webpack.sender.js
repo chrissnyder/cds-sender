@@ -1,9 +1,11 @@
 const path = require('path');
+
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'production',
-  entry: './src/sender.js',
+  entry: './src/sender/turnkey.js',
   output: {
     path: path.resolve(__dirname, 'dist-sender'),
     filename: 'sender.js',
@@ -21,10 +23,11 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      __ENVIRONMENT__: JSON.stringify(process.env.NODE_ENV)
+    }),
     new HtmlWebpackPlugin({
-      title: 'M1 COLS Sender',
-      template: path.resolve(__dirname, 'templates/sender.html'),
-      inject: 'head'
+      title: 'M1 COLS Sender'
     })
   ],
   devServer: {

@@ -58,7 +58,7 @@ export class Sender {
 
       this._requests.connect.push(
         (err) => {
-          clearTimeout(tmeout);
+          clearTimeout(timeout);
           if (err) {
             reject(err)
           } else {
@@ -176,14 +176,22 @@ export class Sender {
         return;
       }
       const error = new Error('Unable to connect to receiver.');
-      for (const connect of this._requests.connect) {
-        connect(error);
+      for (const connectionRequest of this._requests.connect) {
+        connectionRequest(error);
       }
       return;
     }
 
     if (message.data.includes('ready') && !this._connected) {
       this._connected = true;
+      if (!this._requests.connect) {
+        return;
+      }
+
+      for (const connectionRequest of this._requests.connect) {
+        connectionRequest();
+      }
+      delete this._requests.connect;
     } else if (message.data === this._makeMessage('ready')) {
       return;
     }
