@@ -1,13 +1,14 @@
 const path = require('path');
+
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'production',
-  entry: './src/receiver.js',
+  entry: './src/receiver/index.js',
   output: {
     path: path.resolve(__dirname, 'dist-receiver'),
-    filename: 'receiver.js',
-    libraryTarget: 'window'
+    filename: 'receiver.js'
   },
   module: {
     rules: [
@@ -21,11 +22,10 @@ module.exports = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      title: 'M1 COLS Receiver',
-      template: path.resolve(__dirname, 'templates/receiver.html'),
-      inject: 'head'
-    })
+    new webpack.DefinePlugin({
+      __ENVIRONMENT__: JSON.stringify(process.env.NODE_ENV)
+    }),
+    new HtmlWebpackPlugin({ title: 'M1 COLS Receiver' })
   ],
   devServer: {
     contentBase: path.resolve(__dirname, 'dist-receiver'),
