@@ -10,6 +10,8 @@ export class CdsSender {
 
   constructor(url: string) {
     this._sender = new Sender(url);
+
+    const methods = ['get', 'set', 'del', 'clear', 'getKeys'];
   }
 
   init() {
@@ -27,6 +29,22 @@ export class CdsSender {
       return Promise.all(setters);
     }
     return Promise.resolve(null);
+  }
+
+  get(): Promise<string> {
+    return this._sender.get(...arguments);
+  }
+  set(): Promise<string> {
+    return this._sender.set(...arguments);
+  }
+  del(): Promise<string> {
+    return this._sender.del(...arguments);
+  }
+  clear(): Promise<string> {
+    return this._sender.clear(...arguments);
+  }
+  getKeys(): Promise<string> {
+    return this._sender.getKeys(...arguments);
   }
 }
 
