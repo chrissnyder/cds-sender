@@ -38,4 +38,5 @@ function readAttribution(search) {
   };
 }
 
+// RECEIVER_URL is injected via webpack
 boot(RECEIVER_URL, window.location);
