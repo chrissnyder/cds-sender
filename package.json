@@ -1,5 +1,5 @@
 {
-  "name": "cross-domain-storage",
+  "name": "cross-domain-storage-sender",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

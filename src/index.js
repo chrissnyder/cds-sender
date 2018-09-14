@@ -5,22 +5,8 @@ import toString from 'lodash/toString';
 
 import { Sender } from './sender';
 
-type Environment = 'develop' | 'staging' | 'production' | 'local';
-
-function boot(
-  environment: Environment,
-  location: Location
-) {
-  const urls = {
-    'develop': 'https://develop-cols.m1finance.com',
-    'staging': 'https://staging-cols.m1finance.com',
-    'production': 'https://cols.m1finance.com',
-    'local': 'http://localhost:3003',
-  };
-
-  const url = urls[environment];
+function boot(url: string, location: Location) {
   const sender = new Sender(url);
-
   sender.onConnect()
     .then(() => {
       const search = qs.parse(location.search);
@@ -52,4 +38,4 @@ function readAttribution(search) {
   };
 }
 
-boot(__ENVIRONMENT__, window.location);
+boot(RECEIVER_URL, window.location);
