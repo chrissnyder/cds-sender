@@ -2,6 +2,14 @@
   "name": "cross-domain-storage-sender",
   "version": "0.1.0",
   "private": true,
+  "author": "M1 Finance",
+  "main": "./lib/cds-sender.js",
+  "scripts": {
+    "watch": "webpack-dev-server --open --config ./webpack.watch.js",
+    "build-for-browser": "webpack --config ./webpack.browser.js",
+    "build-as-module": "webpack --config ./webpack.module.js",
+    "build": "yarn run build-for-browser && yarn run build-as-module"
+  },
   "dependencies": {
     "lodash": "4.17.11",
     "query-string": "5.1.1"

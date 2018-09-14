@@ -5,19 +5,29 @@ import toString from 'lodash/toString';
 
 import { Sender } from './sender';
 
-function boot(url: string, location: Location) {
-  const sender = new Sender(url);
-  sender.onConnect()
-    .then(() => {
-      const search = qs.parse(location.search);
-      const attribution = readAttribution(search);
-      if (attribution) {
-        for (const [tag, value] of Object.entries(attribution)) {
-          sender.set(tag, value);
-        }
+export class CdsSender {
+  _sender: Sender;
+
+  constructor(url: string) {
+    this._sender = new Sender(url);
+  }
+
+  init() {
+    return this._sender.onConnect();
+  }
+
+  recordAttribution(location: Location) {
+    const search = qs.parse(location.search);
+    const attribution = readAttribution(search);
+    if (attribution) {
+      const setters = [];
+      for (const [tag, value] of Object.entries(attribution)) {
+        setters.push(sender.set(tag, value));
       }
-    })
-    .catch(e => console.error(e));
+      return Promise.all(setters);
+    }
+    return Promise.resolve(null);
+  }
 }
 
 function readAttribution(search) {
@@ -37,6 +47,3 @@ function readAttribution(search) {
     content: toString(search['utm_content']) || null
   };
 }
-
-// RECEIVER_URL is injected via webpack
-boot(RECEIVER_URL, window.location);
