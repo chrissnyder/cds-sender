@@ -10,8 +10,6 @@ export class CdsSender {
 
   constructor(url: string) {
     this._sender = new Sender(url);
-
-    const methods = ['get', 'set', 'del', 'clear', 'getKeys'];
   }
 
   init() {
