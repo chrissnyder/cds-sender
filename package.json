@@ -8,7 +8,8 @@
     "watch": "webpack-dev-server --open --config ./webpack.watch.js",
     "build-for-browser": "webpack --config ./webpack.browser.js",
     "build-as-module": "webpack --config ./webpack.module.js",
-    "build": "yarn run build-for-browser && yarn run build-as-module"
+    "build": "yarn run build-for-browser && yarn run build-as-module",
+    "postversion": "git push && git push --tags"
   },
   "dependencies": {
     "lodash": "4.17.11",
