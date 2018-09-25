@@ -8,7 +8,8 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'lib'),
-    filename: 'cds-sender.js'
+    filename: 'cds-sender.js',
+    libraryTarget: 'commonjs2'
   },
   module: {
     rules: [
