@@ -5,7 +5,7 @@ import toString from 'lodash/toString';
 
 import { Sender } from './sender';
 
-export class CdsSender {
+export default class CdsSender {
   _sender: Sender;
 
   constructor(url: string) {
