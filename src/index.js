@@ -22,7 +22,7 @@ export default class CdsSender {
     if (attribution) {
       const setters = [];
       for (const [tag, value] of Object.entries(attribution)) {
-        setters.push(sender.set(tag, value));
+        setters.push(this._sender.set(tag, value));
       }
       return Promise.all(setters);
     }
