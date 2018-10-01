@@ -10,6 +10,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'lib'),
     filename: 'cds-sender.js',
+    library: 'CdsSender',
+    libraryExport: 'default',
     libraryTarget: 'window'
   },
   module: {
