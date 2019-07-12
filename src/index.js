@@ -67,7 +67,6 @@ export default class CdsSender {
   }
 
   isReferredByOrganicSearch(referrer: string): boolean {
-    console.log(referrer);
     switch (referrer) {
       case 'https://www.google.com/':
       case 'https://www.bing.com/':
