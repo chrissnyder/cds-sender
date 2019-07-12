@@ -66,8 +66,9 @@ export default class CdsSender {
     });
   }
 
-  isReferredByOrganicSearch(): boolean {
-    switch (document.referrer) {
+  isReferredByOrganicSearch(referrer: string): boolean {
+    console.log(referrer);
+    switch (referrer) {
       case 'https://www.google.com/':
       case 'https://www.bing.com/':
       case 'https://www.yahoo.com/':
