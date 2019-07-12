@@ -1,6 +1,6 @@
 {
   "name": "cross-domain-storage-sender",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "author": "M1 Finance",
   "main": "./lib/cds-sender.js",
