@@ -44,7 +44,7 @@ export default class CdsSender {
       .then(() => location ? this.recordAttribution(location) : null);
   }
 
-  recordAttribution(location: Location): Promise<void> {
+  recordAttribution(location: Location): Promise<?Attribution> {
     const attribution = this.readAttributionFromLocation(location);
     if (!attribution) return Promise.resolve(null);
 
@@ -59,7 +59,7 @@ export default class CdsSender {
       }
     }
 
-    return Promise.all(setters);
+    return Promise.all(setters).then(() => attribution);
   }
 
   hasAttribution(): Promise<boolean> {
