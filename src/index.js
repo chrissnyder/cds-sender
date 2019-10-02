@@ -104,10 +104,10 @@ function readAttribution(search): Attribution {
   }
 
   return {
-    SOURCE: toString(search[UTM_SOURCE]),
-    MEDIUM: toString(search[UTM_MEDIUM]),
-    CAMPAIGN: toString(search[UTM_CAMPAIGN]),
-    TERM: toString(search[UTM_TERM]) || null,
-    CONTENT: toString(search[UTM_CONTENT]) || null
+    [SOURCE]: toString(search[UTM_SOURCE]),
+    [MEDIUM]: toString(search[UTM_MEDIUM]),
+    [CAMPAIGN]: toString(search[UTM_CAMPAIGN]),
+    [TERM]: toString(search[UTM_TERM]) || null,
+    [CONTENT]: toString(search[UTM_CONTENT]) || null
   };
 }
