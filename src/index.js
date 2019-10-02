@@ -79,11 +79,17 @@ export default class CdsSender {
     return new Promise((resolve, reject) => {
       this._sender.get(...CdsSender.ALL_TAGS)
         .then(values => {
-          const obj = {};
-          for (const [index, tag] of CdsSender.ALL_TAGS.entries()) {
-            obj[tag] = values[index];
+          // TODO: Possible to consolidate checking for validated
+          // attribution values?
+          if (!values[0] || !values[1] || !values[2]) {
+            resolve(null);
+          } else {
+            const obj = {};
+            for (const [index, tag] of CdsSender.ALL_TAGS.entries()) {
+              obj[tag] = values[index];
+            }
+            resolve(obj);
           }
-          resolve(obj);
         })
         .catch((e) => reject(e))
     });
