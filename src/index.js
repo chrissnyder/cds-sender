@@ -80,7 +80,7 @@ export default class CdsSender {
       this._sender.get(...CdsSender.ALL_TAGS)
         .then(values => {
           const obj = {};
-          for (const [tag, index] of CdsSender.ALL_TAGS) {
+          for (const [index, tag] of CdsSender.ALL_TAGS.entries()) {
             obj[tag] = values[index];
           }
           resolve(obj);
