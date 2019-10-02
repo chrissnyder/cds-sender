@@ -45,7 +45,7 @@ export default class CdsSender {
 
   recordAttribution(location: Location): Promise<?Attribution> {
     const search = qs.parse(location.search);
-    const attribution = readAttribution(search);
+    const attribution = readAttributionFromSearch(search);
     if (!attribution) return Promise.resolve(null);
 
     const setters = [];
@@ -67,6 +67,20 @@ export default class CdsSender {
       this._sender.get(...CdsSender.REQUIRED_TAGS)
         .then(result => resolve(result.filter(Boolean).length === CdsSender.REQUIRED_TAGS.length))
         .catch((e) => reject(e));
+    });
+  }
+
+  readAttribution(): Promise<?Attribution> {
+    return new Promise((resolve, reject) => {
+      this._sender.get(...CdsSender.ALL_TAGS)
+        .then(values => {
+          const obj = {};
+          for (const [tag, index] of CdsSender.ALL_TAGS) {
+            obj[tag] = values[index];
+          }
+          resolve(obj);
+        })
+        .catch((e) => reject(e))
     });
   }
 
@@ -98,7 +112,7 @@ export default class CdsSender {
   }
 }
 
-function readAttribution(search): Attribution {
+function readAttributionFromSearch(search): Attribution {
   // Ignore attribution if all three required fields aren't present.
   if (
     !search[UTM_SOURCE] ||
