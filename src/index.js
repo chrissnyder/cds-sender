@@ -17,6 +17,9 @@ const CAMPAIGN = ('campaign': 'campaign');
 const TERM = ('term': 'term');
 const CONTENT = ('content': 'content');
 
+const MEDIUM_ORGANIC_SEARCH = ('organic-search': 'organic-search');
+const MEDIUM_DIRECT = ('direct': 'direct');
+
 type Attribution = {
   [SOURCE | MEDIUM | CAMPAIGN | TERM | CONTENT]: string
 };
@@ -24,6 +27,7 @@ type Attribution = {
 export default class CdsSender {
   static REQUIRED_TAGS = [SOURCE, MEDIUM, CAMPAIGN];
   static ALL_TAGS = [...CdsSender.REQUIRED_TAGS, TERM, CONTENT];
+  static IGNORED_MEDIUMS = [MEDIUM_ORGANIC_SEARCH, MEDIUM_DIRECT];
 
   _sender: Sender;
 
@@ -38,19 +42,8 @@ export default class CdsSender {
   recordAttribution(location: Location) {
     const search = qs.parse(location.search);
     const attribution = readAttribution(search);
-    return attribution
-      ? this.setAttribution(attribution)
-      : Promise.resolve(null);
-  }
+    if (!attribution) return Promise.resolve(null);
 
-  setAttribution(attribution: Attribution) {
-    if (
-      !attribution[SOURCE] ||
-      !attribution[MEDIUM] ||
-      !attribution[CAMPAIGN]
-    ) {
-      return Promise.resolve(null);
-    }
     const setters = [];
     for (const [tag, value] of Object.entries(attribution)) {
       setters.push(this._sender.set(tag, value));
@@ -95,11 +88,18 @@ export default class CdsSender {
 }
 
 function readAttribution(search): Attribution {
+  // Ignore attribution if all three required fields aren't present.
   if (
     !search[UTM_SOURCE] ||
     !search[UTM_MEDIUM] ||
     !search[UTM_CAMPAIGN]
   ) {
+    return null;
+  }
+
+  // A "utm_medium" in IGNORED_MEDIUMS means for whatever reason we
+  // do not want to store these past the current user session.
+  if (CdsSender.IGNORED_MEDIUMS.includes(search[UTM_MEDIUM])) {
     return null;
   }
 
