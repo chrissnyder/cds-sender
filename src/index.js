@@ -45,8 +45,7 @@ export default class CdsSender {
   }
 
   recordAttribution(location: Location): Promise<void> {
-    const search = qs.parse(location.search);
-    const attribution = readAttributionFromSearch(search);
+    const attribution = this.readAttributionFromLocation(location);
     if (!attribution) return Promise.resolve(null);
 
     const setters = [];
@@ -54,7 +53,7 @@ export default class CdsSender {
     // do not want to store these past the current user session. Return
     // the read value so consumers can do whatever they'd like, but don't
     // save the values to the receiver.
-    if (!CdsSender.IGNORED_MEDIUMS.includes(search[UTM_MEDIUM])) {
+    if (!CdsSender.IGNORED_MEDIUMS.includes(attribution[MEDIUM])) {
       for (const [tag, value] of Object.entries(attribution)) {
         setters.push(this._sender.set(tag, value));
       }
@@ -69,6 +68,28 @@ export default class CdsSender {
         .then(result => resolve(result.filter(Boolean).length === CdsSender.REQUIRED_TAGS.length))
         .catch((e) => reject(e));
     });
+  }
+
+  // This is present on the class so consumers can use it.
+  readAttributionFromLocation(location: Location): ?Attribution {
+    const search = qs.parse(location.search);
+
+    // Ignore attribution if all three required fields aren't present.
+    if (
+      !search[UTM_SOURCE] ||
+      !search[UTM_MEDIUM] ||
+      !search[UTM_CAMPAIGN]
+    ) {
+      return null;
+    }
+
+    return {
+      [SOURCE]: toString(search[UTM_SOURCE]),
+      [MEDIUM]: toString(search[UTM_MEDIUM]),
+      [CAMPAIGN]: toString(search[UTM_CAMPAIGN]),
+      [TERM]: toString(search[UTM_TERM]) || null,
+      [CONTENT]: toString(search[UTM_CONTENT]) || null
+    };
   }
 
   isReferredByOrganicSearch(referrer: string): boolean {
@@ -97,23 +118,4 @@ export default class CdsSender {
   getKeys(): Promise<string> {
     return this._sender.getKeys(...arguments);
   }
-}
-
-function readAttributionFromSearch(search): Attribution {
-  // Ignore attribution if all three required fields aren't present.
-  if (
-    !search[UTM_SOURCE] ||
-    !search[UTM_MEDIUM] ||
-    !search[UTM_CAMPAIGN]
-  ) {
-    return null;
-  }
-
-  return {
-    [SOURCE]: toString(search[UTM_SOURCE]),
-    [MEDIUM]: toString(search[UTM_MEDIUM]),
-    [CAMPAIGN]: toString(search[UTM_CAMPAIGN]),
-    [TERM]: toString(search[UTM_TERM]) || null,
-    [CONTENT]: toString(search[UTM_CONTENT]) || null
-  };
 }
