@@ -34,13 +34,15 @@ export default class CdsSender {
   static IGNORED_MEDIUMS = [MEDIUM_ORGANIC_SEARCH, MEDIUM_DIRECT];
 
   _sender: Sender;
+  _attribution: ?Attribution = null;
 
   constructor(url: string) {
     this._sender = new Sender(url);
   }
 
-  init() {
-    return this._sender.onConnect();
+  init(location: ?Location) {
+    return this._sender.onConnect()
+      .then(() => location ? this.recordAttribution(location) : null);
   }
 
   recordAttribution(location: Location): Promise<?Attribution> {
@@ -48,6 +50,7 @@ export default class CdsSender {
     const attribution = readAttributionFromSearch(search);
     if (!attribution) return Promise.resolve(null);
 
+    this._attribution = attribution;
     const setters = [];
     // A "utm_medium" in IGNORED_MEDIUMS means for whatever reason we
     // do not want to store these past the current user session. Return
@@ -63,6 +66,7 @@ export default class CdsSender {
   }
 
   hasAttribution(): Promise<boolean> {
+    if (this._attribution) return Promise.resolve(true);
     return new Promise((resolve, reject) => {
       this._sender.get(...CdsSender.REQUIRED_TAGS)
         .then(result => resolve(result.filter(Boolean).length === CdsSender.REQUIRED_TAGS.length))
@@ -71,6 +75,7 @@ export default class CdsSender {
   }
 
   readAttribution(): Promise<?Attribution> {
+    if (this._attribution) return Promise.resolve(this._attribution);
     return new Promise((resolve, reject) => {
       this._sender.get(...CdsSender.ALL_TAGS)
         .then(values => {
