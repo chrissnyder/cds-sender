@@ -92,14 +92,16 @@ export default class CdsSender {
     };
   }
 
-  isReferredByOrganicSearch(referrer: string): boolean {
+  readOrganicSearchReferrer(referrer: string): ?string {
     switch (referrer) {
       case 'https://www.google.com/':
+        return 'google';
       case 'https://www.bing.com/':
-      case 'https://www.yahoo.com/':
-        return true;
+        return 'bing';
+      case 'https://search.yahoo.com/':
+        return 'yahoo';
       default:
-        return false;
+        return null;
     }
   }
 
